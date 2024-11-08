@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  containers:
+  - name: mysql
+    image: mysql:latest
+    imagePullPolicy: Always
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: "vijay"
+    - name: MYSQL_DATABASE
+      value: "food_order"
+    - name: MYSQL_USER
+      value: "vijay"
+    - name: MYSQL_PASSWORD
+      value: "vijay"
+    resources:
+      limits:
+        memory: "1Gi"
+        cpu: "500m"
+    ports:
+      - containerPort: 3306
+    volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: mysql-data-volume
+  volumes:
+    - name: mysql-data-volume
+      persistentVolumeClaim:
+        claimName: mysql-data-pvc

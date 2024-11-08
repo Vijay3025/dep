@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurent
+  labels:
+    app: restaurent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: restaurent
+  template:
+    metadata:
+      name: restaurent
+      labels:
+        app: restaurent
+    spec:
+      containers:
+      - name: restaurent
+        image: vijay2553/restaurent_service:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
+
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hres
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: restaurent
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 20
